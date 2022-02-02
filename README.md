@@ -1,2 +1,2 @@
-# Infinity-Arcade
-CS50 Final Project
+# Infinity Arcade
+This is the CS50 Final Project that I made in python using Django.
