@@ -1,0 +1,287 @@
+{% extends "layout.html" %}
+
+{%block title%}Chat!{%endblock%}
+{%block page%}Chat!{%endblock%}
+
+{% block body %}
+<style>
+#chats{
+    overflow-x:hidden;
+    overflow-y:auto;
+    height:65vh;
+    display:fixed;
+    margin-bottom:55px;
+}
+/* Media Query for Mobile Devices */
+@media (max-width: 480px) {
+    .chat-box{
+        background-color:#212128;
+        position:relative;
+        padding:25px;
+        margin:5px;
+        height:auto;
+        width:90%;
+        border-radius:1rem;
+    }
+    .chat-time{
+        position:absolute;
+        right:5%;
+        top:5%;
+        font-size:0.75rem;
+    }
+    .chat-message{
+        font-size:1rem;
+    }
+    .chat-username{
+        position:absolute;
+        bottom:5%;
+        left:5%;
+        font-size:0.75rem;
+    }
+    #bar{
+        display:flex;
+        margin-bottom:25px;
+        background-color:#1f1e2b;
+        height:10%;
+        align-items:center;
+        justify-content:center;
+    }
+    #message{
+        background-color:#2f2f3c;
+        border-radius:1rem;
+        color:white;
+        border:1px none #00bfff;
+        width:80%;
+    }
+    #send{
+        font-size:1rem;
+        height:50%;
+        width:15%;
+    }
+}
+
+/* Media Query for low resolution  Tablets, Ipads */
+@media (min-width: 481px) and (max-width: 767px) {
+    .chat-box{
+        background-color:#212128;
+        position:relative;
+        padding:25px;
+        margin:5px;
+        height:auto;
+        width:90%;
+        border-radius:1rem;
+    }
+    .chat-time{
+        position:absolute;
+        right:5%;
+        top:5%;
+        font-size:0.75rem;
+    }
+    .chat-message{
+        font-size:1rem;
+    }
+    .chat-username{
+        position:absolute;
+        bottom:5%;
+        left:5%;
+        font-size:0.75rem;
+    }
+    #bar{
+        display:flex;
+        margin-bottom:25px;
+        background-color:#1f1e2b;
+        height:10%;
+        align-items:center;
+        justify-content:center;
+    }
+    #message{
+        background-color:#2f2f3c;
+        border-radius:1rem;
+        color:white;
+        border:1px none #00bfff;
+        width:80%;
+    }
+    #send{
+        font-size:1rem;
+        height:50%;
+        width:15%;
+    }
+}
+
+/* Media Query for Tablets Ipads portrait mode */
+@media (min-width: 768px) and (max-width: 1024px){
+    .chat-box{
+        background-color:#212128;
+        position:relative;
+        padding:25px;
+        margin:5px;
+        height:auto;
+        width:90%;
+        border-radius:1rem;
+    }
+    .chat-time{
+        position:absolute;
+        right:5%;
+        top:5%;
+        font-size:0.75rem;
+    }
+    .chat-message{
+        font-size:1rem;
+    }
+    .chat-username{
+        position:absolute;
+        bottom:5%;
+        left:5%;
+        font-size:0.75rem;
+    }
+    #bar{
+        display:flex;
+        margin-bottom:25px;
+        background-color:#1f1e2b;
+        height:10%;
+        align-items:center;
+        justify-content:center;
+    }
+    #message{
+        background-color:#2f2f3c;
+        border-radius:1rem;
+        color:white;
+        border:1px none #00bfff;
+        width:80%;
+        height:60%;
+    }
+    #send{
+        font-size:1rem;
+        height:60%;
+        width:15%;
+    }
+}
+
+/* Media Query for Laptops and Desktops */
+@media (min-width: 1025px) and (max-width: 1280px){
+    .chat-box{
+        background-color:#212128;
+        position:relative;
+        padding:25px;
+        margin:5px;
+        height:auto;
+        width:90%;
+        border-radius:1rem;
+    }
+    .chat-time{
+        position:absolute;
+        right:5%;
+        top:5%;
+        font-size:0.75rem;
+    }
+    .chat-message{
+        font-size:1rem;
+    }
+    .chat-username{
+        position:absolute;
+        bottom:5%;
+        left:5%;
+        font-size:0.75rem;
+    }
+    #bar{
+        display:flex;
+        margin-bottom:25px;
+        background-color:#1f1e2b;
+        height:10%;
+        align-items:center;
+        justify-content:center;
+    }
+    #message{
+        background-color:#2f2f3c;
+        border-radius:1rem;
+        color:white;
+        border:1px none #00bfff;
+        width:80%;
+        height:60%;
+    }
+    #send{
+        font-size:1rem;
+        height:60%;
+        width:15%;
+    }
+}
+
+/* Media Query for Large screens */
+@media (min-width: 1281px) {
+    .chat-box{
+        background-color:#212128;
+        position:relative;
+        padding:25px;
+        margin:5px;
+        height:auto;
+        width:90%;
+        border-radius:1rem;
+    }
+    .chat-time{
+        position:absolute;
+        right:1.5%;
+        top:5%;
+        font-size:0.75rem;
+    }
+    .chat-message{
+        font-size:1rem;
+    }
+    .chat-username{
+        position:absolute;
+        bottom:5%;
+        right:2.5%;
+        font-size:0.75rem;
+    }
+    #bar{
+        display:flex;
+        margin-bottom:25px;
+        background-color:#1f1e2b;
+        height:10%;
+        align-items:center;
+        justify-content:center;
+    }
+    #message{
+        background-color:#2f2f3c;
+        border-radius:1rem;
+        color:white;
+        border:1px none #00bfff;
+        width:80%;
+        height:50%;
+    }
+    #send{
+        font-size:2rem;
+        height:50%;
+        width:15%;
+    }
+}
+#refresh{
+    position:absolute;
+    top:0;
+    right:0;
+    width:4rem;
+    height:1rem;
+    font-size:1rem;
+
+}
+</style>
+
+<div id="chats">
+    <a href="/chat"><button id="refresh">refresh</button></a>
+     {%for chat in chats%}
+        <div class="chat-box fixed-bottom ml-auto">
+            <div class="chat-time">{{chat.time}}</div>
+            <div class="chat-message">{{chat.message}}</div>
+            <div class="chat-username">{{chat.username}}</div>
+        </div>
+     {%endfor%}
+</div>
+ <form action="/chat" method="post" class="fixed-bottom ml-auto" id="bar">
+     <input name="message" id="message" autocomplete="off" required placeholder="Type your message here!">
+     <button id="send" type="submit">></button>
+ </form>
+
+<script>
+    var element = document.getElementById("chats");
+    element.scrollTop = element.scrollHeight;
+</script>
+{% endblock %}
