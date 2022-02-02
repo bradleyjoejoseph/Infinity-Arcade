@@ -1,0 +1,562 @@
+{% extends "layout.html" %}
+
+{%block title%}Poker{%endblock%}
+{%block page%}Poker{%endblock%}
+
+{% block body %}
+<style>
+    #draw{
+        visibility:hidden;
+    }
+    @media (max-width:900px){
+        #canvas{
+            background-color:blue;
+            width:100%;
+            height:100%;
+            position:relative;
+        }
+        .cards{
+            width:12vw;
+            height:19vw;
+            display:inline;
+        }
+        th{
+            font-size:12.5px;
+        }
+        td{
+            font-size:5px;
+        }
+        #draw{
+            position:absolute;
+            bottom:0;
+            right:0;
+            width:60px;
+            height:45px;
+            font-size:22.5px;
+            background-color:gold;
+            color:blue;
+            border-radius:25px;
+            text-align:center;
+            line-height:45px;
+        }
+        #reload{
+            position:absolute;
+            bottom:0px;
+            right:0px;
+            height:100px;
+            width:100px;
+            visibility:hidden;
+        }
+        #winScreen{
+            position:absolute;
+            width:100%;
+            top:150px;
+            font-size:10vw;
+            color:red;
+            animation-name:rainbow;
+            animation-iteration-count:infinite;
+            animation-duration:2s;
+            visibility:hidden;
+        }
+    }
+    @media (min-width:800px){
+        #canvas{
+            background-color:blue;
+            width:100%;
+            height:100%;
+            position:relative;
+        }
+        .cards{
+            width:100px;
+            height:153px;
+            display:flex;
+            display:inline;
+        }
+        th{
+            font-size:30px;
+        }
+        td{
+            font-size:15px;
+        }
+        #noButton{
+            background-color:inherit;
+            width:100px;
+            height:153px;
+            border-radius:0;
+        }
+        #draw{
+            position:absolute;
+            bottom:0;
+            right:0;
+            width:7.5vw;
+            height:5vw;
+            font-size:2.5vw;
+            background-color:gold;
+            color:blue;
+            border-radius:25px;
+            text-align:center;
+            line-height:5vw;
+        }
+        #reload{
+            position:absolute;
+            bottom:0px;
+            right:100px;
+            height:100px;
+            width:100px;
+            visibility:hidden;
+        }
+        #winScreen{
+            animation-name:rainbow;
+            animation-iteration-count:infinite;
+            animation-duration:2s;
+            position:absolute;
+            width:100%;
+            top:150px;
+            font-size:100px;
+            color:red;
+            visibility:hidden;
+        }
+    }
+    table, th, td {
+        border: 1px solid gold;
+        border-collapse:collapse;
+        background-color:blue;
+        color:gold;
+        width:25%;
+    }
+    table{
+        position:absolute;
+        top:0;
+        right:0;
+    }
+    .stats{
+        position:absolute;
+        bottom:0;
+        left:10%;
+        font-size:2vw;
+    }
+
+</style>
+
+
+<div class="game">
+    <div id="canvas">
+        <form method="post" id="play">
+            <button>Play</button>
+            <input id="played" type="hidden" name="postType" value="play">
+        </form>
+        <div id="selected"></div>
+        <div id="winScreen">TYPE OF WIN!</div>
+        <div id="draw" onclick="draw()">DRAW</div>
+        <form action="/poker" method="post">
+            <button id="reload" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"></path>
+                  <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"></path>
+                </svg>
+              </button>
+              <input id="woned" type="hidden" name="postType" value="won">
+              <input id="earned" type="hidden" name="earned" value="0">
+        </form>
+        <div id="table"></div>
+
+                <table>
+                    <thead>
+                        <tr style="border-color:orange; border-width:2.5px;">
+                            <th>HAND</th>
+                            <th>WIN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ROYAL FLUSH</td>
+                            <td>£250</td>
+                        </tr>
+                        <tr>
+                            <td>Straight Flush</td>
+                            <td>£100</td>
+                        </tr>
+                        <tr>
+                            <td>Four of a Kind</td>
+                            <td>£75</td>
+                        </tr>
+                        <tr>
+                            <td>Full house </td>
+                            <td>£50</td>
+                        </tr>
+                        <tr>
+                            <td>Flush</td>
+                            <td>£25</td>
+                        </tr>
+                        <tr>
+                            <td>Straight</td>
+                            <td>£10</td>
+                        </tr>
+                        <tr>
+                            <td>Three of a Kind</td>
+                            <td>£5</td>
+                        </tr>
+                        <tr>
+                            <td>Two Pair</td>
+                            <td>£2</td>
+                        </tr>
+                        <tr>
+                            <td>Jacks or Better</td>
+                            <td>£1</td>
+                        </tr>
+                    </tbody>
+                </table>
+        <div class="row stats">
+            <div class="col">
+                CASH: {{cash}}
+            </div>
+            <div class="col">
+                BET: {{bet}}
+            </div>
+            <div class="col">
+                WON: {{won}}
+            </div>
+        </div>
+        </div>
+</div>
+
+
+<script id="scripty">
+    let postType = "{{postType}}";
+    var deck = [];
+    let nummies = [];
+    let numOfCards = 0;
+    let cardsSel = [];
+    let numberList = [];
+    function getCard(){
+        let symbol = Math.floor(Math.random() * 4) + 1;
+        let type = Math.floor(Math.random() * 13) + 1;
+        if (symbol == 1){
+            symbol = "D";
+        }
+        else if (symbol == 2){
+            symbol = "S";
+        }
+        else if (symbol == 3){
+            symbol = "H";
+        }
+        else if (symbol == 4){
+            symbol = "C";
+        }
+
+        if (type == 1){
+            type = "A";
+        }
+        else if (type == 10){
+            type="T";
+        }
+        else if (type == 11){
+            type="J";
+        }
+        else if (type == 12){
+            type="Q";
+        }
+        else if (type == 13){
+            type="K";
+        }
+        let item = {type:"", symbol:""};
+        item.type = type;
+        item.symbol = symbol;
+        return item;
+    }
+    function makeCard(){
+        let card = getCard();
+        card = card.type + card.symbol + ".png";
+        while (containsObject(card, deck)){
+            card = getCard();
+            card = card.type + card.symbol + ".png";
+        }
+        deck.push(card);
+        return card;
+    }
+    if (postType == "play"){
+        document.querySelector("#play").style.visibility = "hidden";
+        document.querySelector("#draw").style.visibility = "visible";
+        let images = [];
+        for (var i = 0; i < 5; i++){
+            let card = makeCard();
+            images.push('<img onclick="selected(' + '\'' + card + '\'' + ', ' + i + ')" class="cards" src="' + '/static/deck/' + card + '">');
+        }
+        document.querySelector("#table").innerHTML = images.join(" ");
+    }
+    function draw(){
+        let images = [];
+        for (var i = 0; i < 5 - numOfCards; i++){
+            let card = makeCard();
+            images.push('<img class="cards" src="' + '/static/deck/' + card + '">');
+            cardsSel.push(card.slice(0, 2));
+        }
+        document.querySelector("#draw").style.visibility = "hidden";
+        document.querySelector("#reload").style.visibility = "visible";
+        images.push(document.querySelector("#selected").innerHTML);
+        document.querySelector("#selected").innerHTML = "";
+        document.querySelector("#table").innerHTML = images.join(" ");
+
+        // WIN COMBINATIONS
+        //test conditions
+
+        // cardsSel = ["1H", "2H", "3C", "1D", "2S"];
+
+        //test conditions
+
+                for (i = 0; i < 5; i++){
+                    let num = cardsSel[i][0];
+                    if (num == "A"){
+                        num = 1;
+                    }
+                    else if (num == "K"){
+                        num = 11;
+                    }
+                    else if (num == "Q"){
+                        num = 12;
+                    }
+                    else if (num == "J"){
+                        num = 13;
+                    }
+                    else if (num == "T"){
+                        num = 10;
+                    }
+                    else{
+                        num = parseInt(num);
+                    }
+                    numberList.push(num);
+                }
+                numberList.sort(function(a, b){return a-b});
+        // ROYAL FLUSH
+        if (containsObject("AH", cardsSel) && containsObject("KH", cardsSel) && containsObject("QH", cardsSel) && containsObject("JH", cardsSel) && containsObject("TH", cardsSel)){
+            winScreen("ROYAL FLUSH!", 250);
+        }
+        else if (containsObject("AD", cardsSel) && containsObject("KD", cardsSel) && containsObject("QD", cardsSel) && containsObject("JD", cardsSel) && containsObject("TD", cardsSel)){
+            winScreen("ROYAL FLUSH!", 250);
+        }
+        else if (containsObject("AS", cardsSel) && containsObject("KS", cardsSel) && containsObject("QS", cardsSel) && containsObject("JS", cardsSel) && containsObject("TS", cardsSel)){
+            winScreen("ROYAL FLUSH!", 250);
+        }
+        else if (containsObject("AC", cardsSel) && containsObject("KC", cardsSel) && containsObject("QC", cardsSel) && containsObject("JC", cardsSel) && containsObject("TC", cardsSel)){
+            winScreen("ROYAL FLUSH!", 250);
+        }
+
+
+        // STRAIGHT FLUSH
+        let hPossible = 0;
+        let dPossible = 0;
+        let sPossible = 0;
+        let cPossible = 0;
+        let possible = false;
+        for (i = 0; i < 5; i++){
+            if (cardsSel[i].indexOf("H") > -1){
+                hPossible += 1;
+            }
+        }
+        for (i = 0; i < 5; i++){
+            if (cardsSel[i].indexOf("D") > -1){
+                dPossible += 1;
+            }
+        }
+        for (i = 0; i < 5; i++){
+            if (cardsSel[i].indexOf("S") > -1){
+                sPossible += 1;
+            }
+        }
+        for (i = 0; i < 5; i++){
+            if (cardsSel[i].indexOf("C") > -1){
+                cPossible += 1;
+            }
+        }
+
+        if (hPossible == 5 || dPossible == 5 || sPossible == 5 || cPossible == 5){
+            possible = true;
+        }
+
+        if (possible == true){
+            let outcome = false;
+            let count = 0;
+
+            for (i = 0; i < 5; i++){
+                if (numberList[i] + 1 == numberList[i+1]){
+                    count += 1;
+                }
+            }
+            if (count == 4){
+                outcome = true;
+            }
+
+            if (outcome == true){
+                winScreen("STRAIGHT FLUSH!", 100);
+            }
+        }
+
+        // Four of a Kind
+
+        for (i = 0; i < 5; i++){
+            let selected = numberList[i];
+            if (countObjects(numberList, selected) == 4){
+                winScreen("Four of a Kind!", 75);
+            }
+        }
+
+        // Full house
+        possible = 0;
+        for (i = 0; i < 5; i++){
+            let selected = numberList[i];
+            if (countObjects(numberList.slice(0, 3), selected) == 3){
+                possible += 1;
+            }
+        }
+        for (i = 0; i < 5; i++){
+            let selected = numberList[i];
+            if (countObjects(numberList.slice(3, 5), selected) == 2){
+                    possible += 1;
+            }
+        }
+        if (possible == 5){
+            winScreen("Full House!", 50);
+        }
+        possible = 0;
+        for (i = 0; i < 5; i++){
+            let selected = numberList[i];
+            if (countObjects(numberList.slice(2, 5), selected) == 3){
+                possible += 1;
+            }
+        }
+        for (i = 0; i < 5; i++){
+            let selected = numberList[i];
+            if (countObjects(numberList.slice(0, 2), selected) == 2){
+                    possible += 1;
+            }
+        }
+        if (possible == 5){
+            winScreen("Full House!", 50);
+        }
+
+        // Flush
+        hPossible = 0;
+        dPossible = 0;
+        sPossible = 0;
+        cPossible = 0;
+        possible = false;
+        for (i = 0; i < 5; i++){
+            if (cardsSel[i].indexOf("H") > -1){
+                hPossible += 1;
+            }
+        }
+        for (i = 0; i < 5; i++){
+            if (cardsSel[i].indexOf("D") > -1){
+                dPossible += 1;
+            }
+        }
+        for (i = 0; i < 5; i++){
+            if (cardsSel[i].indexOf("S") > -1){
+                sPossible += 1;
+            }
+        }
+        for (i = 0; i < 5; i++){
+            if (cardsSel[i].indexOf("C") > -1){
+                cPossible += 1;
+            }
+        }
+        if (hPossible == 5 || dPossible == 5 || sPossible == 5 || cPossible == 5){
+            possible = true;
+        }
+        if (possible == true){
+            winScreen("Flush!", 25);
+        }
+
+        // Straight
+        possible = false;
+        let count = 0;
+
+        for (i = 0; i < 5; i++){
+            if (numberList[i] + 1 == numberList[i+1]){
+                count += 1;
+            }
+        }
+        if (count == 4){
+            possible = true;
+        }
+        else if (numberList[0] == 1 && numberList[1] == 10 && numberList[2] == 11 && numberList[3] == 12 && numberList[4] == 13){
+            winScreen("Straight!", 10);
+        }
+
+        if (possible == true){
+            winScreen("Straight!", 10);
+        }
+
+        // Three of a Kind
+        possible = 0;
+        for (i = 0; i < 5; i++){
+            let selected = numberList[i];
+            if (countObjects(numberList, selected) == 3){
+                possible += 1;
+            }
+        }
+        if (possible == 3){
+            winScreen("Three of a Kind!", 5);
+        }
+
+        // Two Pair and Jacks or better
+        possible = 0;
+        for (i = 0; i < 5; i++){
+            let selected = numberList[i];
+            if (countObjects(numberList, selected) == 2){
+                if (selected > 10 || selected == 1){
+                    winScreen("Jacks or better!", 1);
+                }
+
+                possible += 1;
+
+            }
+        }
+        if (possible == 4){
+            winScreen("Two Pair!", 2)
+        }
+
+
+        // WIN COMBINATIONS
+
+    }
+    function selected(card, num){
+        if (containsObject(num, nummies) == false){
+            nummies.push(num);
+            document.querySelector("#selected").innerHTML += '<img class="cards" src="' + '/static/deck/' + card + '">';
+            numOfCards += 1;
+            cardsSel.push(card.slice(0, 2));
+        }
+    }
+    function countObjects(list, object){
+        var j = 0;
+        for (i = 0; i < list.length; i++){
+            if (list[i] == object){
+                j++;
+            }
+        }
+        return j;
+    }
+    function winScreen(type, money){
+        document.querySelector("#winScreen").style.visibility = "visible";
+        document.querySelector("#winScreen").innerHTML = type;
+        document.querySelector("#earned").value = money;
+        document.querySelector("scripty").innerHTML = "";
+    }
+
+
+    // Borrowed Scripts
+
+    //https://stackoverflow.com/a/4587130/14214193
+    function containsObject(obj, list) {
+        var i;
+        for (i = 0; i < list.length; i++) {
+            if (list[i] === obj) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+</script>
+{% endblock %}
