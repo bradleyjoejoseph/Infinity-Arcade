@@ -1,0 +1,211 @@
+{% extends "layout.html" %}
+
+{%block title%}Infinite Spinner{%endblock%}
+{%block page%}Infinite Spinner{%endblock%}
+
+{% block body %}
+<style>
+/* Media Query for Mobile Devices */
+@media (max-width: 480px) {
+    .game{
+        background-color:inherit;
+    }
+    #boxHolder{
+        width:100%;
+        background-image: url("/static/background.jpg");
+        background-size:100%;
+        border-radius:1rem;
+    }
+    .boxes{
+        margin:0.25rem;
+        width:20%;
+    }
+    #win{
+        font-size:100%;
+        border-style:solid;
+        border-color:red;
+        border-radius:1rem;
+        text-align:center;
+        animation-name:rainbow;
+        animation-duration:2s;
+        animation-iteration-count:infinite;
+    }
+}
+
+/* Media Query for low resolution  Tablets, Ipads */
+@media (min-width: 481px) and (max-width: 767px) {
+    .game{
+        background-color:inherit;
+    }
+    #boxHolder{
+        width:100%;
+        background-image: url("/static/background.jpg");
+        background-size:100%;
+        border-radius:1rem;
+    }
+    .boxes{
+        margin:0.25rem;
+        width:20%;
+    }
+    #win{
+        font-size:100%;
+        border-style:solid;
+        border-color:red;
+        border-radius:1rem;
+        text-align:center;
+        animation-name:rainbow;
+        animation-duration:2s;
+        animation-iteration-count:infinite;
+    }
+}
+
+/* Media Query for Tablets Ipads portrait mode */
+@media (min-width: 768px) and (max-width: 1024px){
+    .game{
+        background-color:inherit;
+        display:inline-block;
+    }
+    #boxHolder{
+        width:50%;
+        background-image: url("/static/background.jpg");
+        background-size:100%;
+        border-radius:1rem;
+        float:left;
+    }
+    .stats{
+        width:40%;
+        float:right;
+    }
+    .boxes{
+        margin:0.25rem;
+        width:20%;
+    }
+    #win{
+        width:40%;
+        font-size:100%;
+        border-style:solid;
+        border-color:red;
+        border-radius:1rem;
+        text-align:center;
+        animation-name:rainbow;
+        animation-duration:2s;
+        animation-iteration-count:infinite;
+        float:right;
+    }
+    #reset{
+        float:right;
+        width:40%;
+    }
+}
+
+/* Media Query for Laptops and Desktops */
+@media (min-width: 1025px) and (max-width: 1280px){
+    .game{
+        background-color:inherit;
+        display:inline-block;
+    }
+    #boxHolder{
+        width:50%;
+        background-image: url("/static/background.jpg");
+        background-size:100%;
+        border-radius:1rem;
+        float:left;
+    }
+    .stats{
+        width:40%;
+        float:right;
+    }
+    .boxes{
+        margin:0.25rem;
+        width:20%;
+    }
+    #win{
+        width:40%;
+        font-size:100%;
+        border-style:solid;
+        border-color:red;
+        border-radius:1rem;
+        text-align:center;
+        animation-name:rainbow;
+        animation-duration:2s;
+        animation-iteration-count:infinite;
+        float:right;
+    }
+    #reset{
+        float:right;
+        width:40%;
+    }
+}
+
+/* Media Query for Large screens */
+@media (min-width: 1281px) {
+    .game{
+        background-color:inherit;
+        display:inline-block;
+    }
+    #boxHolder{
+        width:50%;
+        background-image: url("/static/background.jpg");
+        background-size:100%;
+        border-radius:1rem;
+        float:left;
+    }
+    .stats{
+        width:40%;
+        float:right;
+    }
+    .boxes{
+        margin:0.25rem;
+        width:20%;
+    }
+    #win{
+        width:40%;
+        font-size:100%;
+        border-style:solid;
+        border-color:red;
+        border-radius:1rem;
+        text-align:center;
+        animation-name:rainbow;
+        animation-duration:2s;
+        animation-iteration-count:infinite;
+        float:right;
+    }
+    #reset{
+        float:right;
+        width:40%;
+        visibility:hidden;
+        font-size:50px;
+        height:5rem;
+        text-align:center;
+        line-height:5rem;
+    }
+}
+#reset{
+    background-color:#00bfff;
+        border-style:none;
+        border-radius:25px;
+        color:#1f1e2b;
+}
+
+</style>
+<div class="game">
+        <div id="boxHolder">
+            {%for list_item in icons%}
+            {%for pic in list_item%}
+            <img class="boxes" src="/static/{{pic}}.png">
+            {%endfor%}
+            {%endfor%}
+        </div>
+        <a href="/infiniteSpinner"><div onclick="this.style.visibility = 'hidden'" id="reset">SPIN</div></a><br>
+        <div class="stats">CASH: £{{cash}}<br>BET: £{{bet}}<br>WIN: £{{won}}</div>
+        <div id="win">{{message}}</div>
+        <div id="jackpot">Jackpot: {{jackpot}}</div>
+
+</div>
+
+<script>
+    setTimeout(function(){
+        document.querySelector("#reset").style.visibility = "visible";
+    }, 1000)
+</script>
+{% endblock %}
