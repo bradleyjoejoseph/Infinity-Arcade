@@ -1,0 +1,263 @@
+{% extends "layout.html" %}
+
+{%block title%}Home{%endblock%}
+{%block page%}Home{%endblock%}
+
+{% block body %}
+<style>
+/* Media Query for Mobile Devices */
+@media (max-width: 480px) {
+    #title{
+        font-size:2rem;
+    }
+    .topics{
+        font-size:1.75rem;
+        margin-top:3rem;
+    }
+    hr{
+        width:90%;
+        margin-right:10%;
+        border-color:white;
+    }
+    #games{
+        width:90%;
+    }
+    #popular{
+        width:90%;
+    }
+    .game-box{
+        margin-bottom:1rem;
+        width:100%;
+    }
+    .game-img{
+        width:100%;
+        border-top-left-radius:2rem;
+        border-top-right-radius:2rem;
+    }
+    .game-name{
+        border-bottom-left-radius:2rem;
+        border-bottom-right-radius:2rem;
+        background-color:purple;
+        font-size:1.5rem;
+        height:3.5rem;
+        text-align:center;
+        line-height:2.75rem;
+    }
+    .visited{
+        font-size:1rem;
+        line-height:0;
+    }
+}
+
+/* Media Query for low resolution  Tablets, Ipads */
+@media (min-width: 481px) and (max-width: 767px) {
+    #title{
+        font-size:2rem;
+    }
+    .topics{
+        font-size:1.75rem;
+        margin-top:3rem;
+    }
+    hr{
+        width:90%;
+        margin-right:10%;
+        border-color:white;
+    }
+    #games{
+        width:90%;
+    }
+    #popular{
+        width:90%;
+    }
+    .game-box{
+        margin-bottom:1rem;
+        width:100%;
+    }
+    .game-img{
+        width:100%;
+        border-top-left-radius:2rem;
+        border-top-right-radius:2rem;
+    }
+    .game-name{
+        border-bottom-left-radius:2rem;
+        border-bottom-right-radius:2rem;
+        background-color:purple;
+        font-size:1.5rem;
+        height:3.5rem;
+        text-align:center;
+        line-height:2.75rem;
+    }
+    .visited{
+        font-size:1rem;
+        line-height:0;
+    }
+}
+
+/* Media Query for Tablets Ipads portrait mode */
+@media (min-width: 768px) and (max-width: 1024px){
+    #title{
+        font-size:2rem;
+    }
+    .topics{
+        font-size:1.75rem;
+        margin-top:3rem;
+    }
+    hr{
+        width:90%;
+        margin-right:10%;
+        border-color:white;
+    }
+    #games{
+        width:90%;
+
+    }
+    #popular{
+        width:90%;
+
+        margin-bottom:1rem;
+    }
+    .game-box{
+        margin:0.5rem;
+        width:17.5%;
+        display:inline-block;
+    }
+    .game-img{
+        width:100%;
+        border-top-left-radius:2rem;
+        border-top-right-radius:2rem;
+    }
+    .game-name{
+        border-bottom-left-radius:2rem;
+        border-bottom-right-radius:2rem;
+        background-color:purple;
+        font-size:0.75rem;
+        height:1.75rem;
+        text-align:center;
+        line-height:1rem;
+    }
+    .visited{
+        font-size:0.5rem;
+        line-height:0.5rem;
+    }
+}
+
+/* Media Query for Laptops and Desktops */
+@media (min-width: 1025px) and (max-width: 1280px){
+    #title{
+        font-size:2rem;
+    }
+    .topics{
+        font-size:1.75rem;
+        margin-top:3rem;
+    }
+    hr{
+        width:90%;
+        margin-right:10%;
+        border-color:white;
+    }
+    #games{
+        width:90%;
+    }
+    #popular{
+        width:90%;
+        margin-bottom:1rem;
+    }
+    .game-box{
+        margin:0.5rem;
+        width:17.5%;
+        display:inline-block;
+    }
+    .game-img{
+        width:100%;
+        border-top-left-radius:2rem;
+        border-top-right-radius:2rem;
+    }
+    .game-name{
+        border-bottom-left-radius:2rem;
+        border-bottom-right-radius:2rem;
+        background-color:purple;
+        font-size:0.75rem;
+        height:1.75rem;
+        text-align:center;
+        line-height:1rem;
+    }
+    .visited{
+        font-size:0.5rem;
+        line-height:0.5rem;
+    }
+}
+
+/* Media Query for Large screens */
+@media (min-width: 1281px) {
+    #title{
+        font-size:2rem;
+    }
+    .topics{
+        font-size:1.75rem;
+        margin-top:3rem;
+    }
+    hr{
+        width:90%;
+        margin-right:10%;
+        border-color:white;
+    }
+    #games{
+        width:90%;
+    }
+    #popular{
+        width:90%;
+        margin-bottom:1rem;
+    }
+    .game-box{
+        margin:0.5rem;
+        width:17.5%;
+        display:inline-block;
+    }
+    .game-img{
+        width:100%;
+        border-top-left-radius:2rem;
+        border-top-right-radius:2rem;
+    }
+    .game-name{
+        border-bottom-left-radius:2rem;
+        border-bottom-right-radius:2rem;
+        background-color:purple;
+        font-size:1rem;
+        height:2.5rem;
+        text-align:center;
+        line-height:1.5rem;
+    }
+    .visited{
+        font-size:0.5rem;
+        line-height:1rem;
+    }
+}
+</style>
+    <h2>Hello, {{username}}!</h2>
+
+    <p>You currently have £{{cash}}</p>
+    <div class="topics">Recents</div>
+    <hr>
+    <div id="games">
+    {%for item in games%}
+        <div class="game-box">
+            <a href="/{{item.image}}/info"><img class="game-img" src="/static/{{item.image}}.png"></a>
+            <div class="game-name">
+                {{item.name}}
+            </div>
+        </div>
+    {%endfor%}
+    </div>
+    <div class="topics">Popular</div>
+    <hr>
+    <div id="popular">
+    {%for item in popular%}
+        <div class="game-box">
+            <a href="/{{item.image}}/info"><img class="game-img" src="/static/{{item.image}}.png"></a>
+            <div class="game-name">
+                {{item.name}} <p class="visited">Times visited: {{item.count}}</p>
+            </div>
+        </div>
+    {%endfor%}
+    </div>
+{% endblock %}
