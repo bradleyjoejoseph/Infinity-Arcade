@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{%block title%}Admin DELETE{%endblock%}
+{%block page%}Admin DELETE{%endblock%}
+
+{% block body %}
+<table>
+
+    <center>
+        <form action="/getDelete" method="post">
+            <input type="text" placeholder="User ID" name="userId">
+            <button style="width:5rem;height:2rem; font-size:1rem;" type="submit">DELETE</button>
+        </form>
+    </center>
+</table>
+{% endblock %}
