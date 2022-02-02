@@ -1,0 +1,267 @@
+{% extends "layout.html" %}
+
+{%block title%}CPS Master{%endblock%}
+{%block page%}CPS Master{%endblock%}
+
+{% block body %}
+<style>
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #900;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #500;
+}
+    #canvas{
+        width:80%;
+        height:100%;
+        display:inline-block;
+        position:relative;
+    }
+    #leaderboard{
+        background-color:#111;
+        border:1px solid red;
+        height:100%;
+        width:20%;
+        display:inline-block;
+        float:left;
+        overflow-x:hidden;
+    }
+    th{
+        border-bottom:1px solid red;
+        border-right:1px solid red;
+        width:100%;
+    }
+    td{
+        border-right:1px solid red;
+        border-bottom:1px solid red;
+    }
+    #submit{
+        position:absolute;
+        bottom:0;
+        right:0;
+        height:40px;
+        width:150px;
+        font-size:1rem;
+        background-color:#111;
+        border:2px solid #0f0;
+        border-radius:25px;
+        text-align:center;
+        line-height:40px;
+        color:white;
+    }
+    #clicker{
+        height:500px;
+        width:70%;
+        background-color:#111;
+        border:1px solid #0f0;
+        border-radius:25px;
+        margin-top:50px;
+        margin-left:15%;
+        overflow:auto;
+    }
+    #clicks{
+        width:100%;
+        margin-top:10px;
+        font-size:25px;
+    }
+    #win{
+        position:absolute;
+        height:100%;
+        width:100%;
+        margin:0;
+        top:0;
+        left:0;
+        background-color: rgba(0, 0, 0, 0.5);
+        line-height:800px;
+        visibility:hidden;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+    #finished-box{
+        background-color:#111;
+        border-radius:25px;
+        width:700px;
+        height:500px;
+        line-height:500px;
+        margin-top:10px;
+        position:fixed;
+    }
+    #set{
+        display:inline;
+        padding:15px;
+        font-size:1vw;
+        background-color:#111;
+        border:2px solid #f00;
+        border-radius:25px;
+        text-align:center;
+        line-height:10px;
+        color:white;
+        position:absolute;
+        bottom:0;
+        left:165px;
+    }
+    #timme{
+        position:absolute;
+        bottom:0;
+        left:10px;
+        height:40px;
+        width:150px;
+        color:white;
+        background-color:#111;
+        border:2px solid #f00;
+        border-radius:25px;
+    }
+    #reload{
+        position:absolute;
+        top:0;
+        right:0;
+        color:white;
+        background-color:#111;
+        border:2px solid #0f0;
+        border-radius:25px;
+    }
+@media (max-width: 1016px) {
+    #leaderboard{
+        width:100%;
+        height:20%;
+    }
+    #clicker{
+        width:70%;
+        height:30%;
+    }
+    #canvas{
+        height:80%;
+        width:100%;
+    }
+}
+</style>
+
+<div class="game">
+    <div id="win">
+        <div id="finished-box">
+            <h2 id="message">Are you cheating? Maybe you messed up?</h2>
+            You got <b id="first">100</b> clicks. That means your clicks per seconds is <b id="second">100</b>!
+        </div>
+    </div>
+    <div id="leaderboard">
+        <table>
+            <thead>
+                <th>
+                    Name
+                </th>
+                <th>
+                    CPS
+                </th>
+            </thead>
+            <tbody>
+                {% for dict_item in leaderboard %}
+
+                    <tr>
+                        {% for key, value in dict_item.items()%}
+                            <td>{{value}}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div id="canvas">
+        <div id="clicks">Clicks: <b id="clickNum">0</b></div>
+        <div id="clicker" onclick="klick()">
+        </div>
+        Click the board to start! You can set your time below or if you choose not to you get one second to get as many as you can!
+        <form action="/cps" method="post">
+            <input type="hidden" value="0" id="klix" name="klix">
+            <button id="submit" onclick="sumbit();">Submit</button>
+        </form>
+        <a href="/cps" id="reload">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"></path>
+              <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"></path>
+            </svg>
+        </a>
+        <input id="timme" placeholder="Time in Seconds">
+        <div id="set" onclick="timE();">Set</div>
+    </div>
+</div>
+
+<script id="scripty">
+    numOfClicks = 0;
+    time = 1000
+    function klick(){
+        if (numOfClicks == 0){
+            first();
+        }
+        numOfClicks += 1;
+
+        updateValues();
+    }
+    function timE(){
+        time = parseInt(document.querySelector("#timme").value);
+        time = time * 1000
+        if (time < 1000 || time == null){
+                time = 1000;
+            }
+    }
+    function first(){
+        document.querySelector("#clicker").innerHTML = "";
+        setTimeout(function(){
+            klick = null;
+            win();
+        }, time)
+
+    }
+    function sumbit(){
+        document.querySelector("#klix").value = realValue;
+    }
+    function win(){
+        document.querySelector("#clicker").style.visibility = "hidden";
+        document.querySelector("#win").style.visibility = "visible";
+        document.querySelector("#first").innerHTML = " " + numOfClicks + " ";
+        document.querySelector("#second").innerHTML = realValue;
+        message();
+    }
+    function message(){
+        if (realValue >= 1){
+            Message = "Wow you suck. Get better!";
+        }
+        if (realValue == 5){
+            Message = "Move those fingers faster- otherwise they'll fall off!";
+        }
+        if (realValue >= 6){
+            Message = "Wow fast fingers, can you do better though?";
+
+        }
+        if (realValue >= 8){
+            Message = "Faster! Faster! Move them fingers faster than the speed of light!"
+        }
+        if (realValue >= 10){
+            Message = "Too fast, your fingers are, make sure you don't strain them too much!";
+        }
+        if (realValue > 16){
+            Message = "I know your using autoclicker it isn't possible otherwise.";
+        }
+
+        document.querySelector("#message").innerHTML = Message;
+    }
+    function updateValues(){
+        document.querySelector("#clicks").innerHTML = "Clicks: " + numOfClicks;
+        realValue = numOfClicks / (time / 1000)
+    }
+
+</script>
+{% endblock %}
