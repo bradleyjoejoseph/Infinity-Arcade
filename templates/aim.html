@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{%block title%}Aim Trainer{%endblock%}
+{%block page%}Aim Trainer{%endblock%}
+
+{% block body %}
+<style>
+    .game{
+        position:relative;
+    }
+    .target{
+        width:25px;
+        height:25px;
+        position:absolute;
+        top:0%;
+        left:0%;
+        outline:1px solid #00bfff;
+        background-color:#00bfff;
+        border:10px solid black;
+
+
+    }
+    #control-panel{
+        position:relative;
+        height:100%;
+        width:20%;
+        border-right:1px solid #00bfff;
+        float:left;
+    }
+    .panel-input{
+        left:0;
+        position:absolute;
+        height:5%;
+        width:80%;
+        color:#00bfff;
+        background-color:#111;
+        border:1px solid #00bfff;
+        border-radius:25px;
+        font-size:1rem;
+    }
+    .panel-buttons{
+        position:absolute;
+        right:0;
+        font-size:1rem;
+        height:5%;
+        width:20%;
+        margin:1px;
+    }
+    #canvas{
+        position:relative;
+        height:100%;
+        width:80%;
+        float:right;
+    }
+</style>
+
+<div class="game">
+    <div id="control-panel">
+        <input id="numOfTargets" class="panel-input" placeholder="No. of Targets">
+        <button class="panel-buttons" onclick="setTargetNum();">Add</button>
+        <input style="top:5%;" id="sizeOfTargets" class="panel-input" placeholder="Target Size">
+        <button style="top:5%;" class="panel-buttons" onclick="setTargetSize();">Set</button>
+        <input style="top:10%;" id="radiusOfTargets" class="panel-input" placeholder="Target Radius">
+        <button style="top:10%;" class="panel-buttons" onclick="setTargetRadi();">Set</button>
+    </div>
+    <div id="canvas">
+    </div>
+</div>
+
+<script>
+let canvas = document.querySelector("#canvas").innerHTML;
+    function setTargetNum(){
+        let NOT = parseInt(document.querySelector("#numOfTargets").value);
+        for (let i = 0; i < NOT; i++){
+            document.querySelector("#canvas").innerHTML += "<div onclick=\"this.setAttribute('draggable', false);this.style.top = Math.floor(Math.random() * 100).toString() + '%';this.style.left = Math.floor(Math.random() * 100).toString() + '%';\" class=\"unselectable target\" ></div>"
+        }
+
+    }
+    function setTargetSize(){
+        let SOT = parseInt(document.querySelector("#sizeOfTargets").value);
+        targets = document.querySelectorAll(".target");
+        for (let i = 0; i < targets.length; i++){
+            targets[i].style.width = SOT.toString() + "px"
+            targets[i].style.height = SOT.toString() + "px"
+        }
+    }
+    function setTargetRadi(){
+        let ROT = parseInt(document.querySelector("#radiusOfTargets").value);
+        targets = document.querySelectorAll(".target");
+        for (let i = 0; i < targets.length; i++){
+            targets[i].style.borderRadius = ROT.toString() + "px"
+            targets[i].style.outlineColor = "black"
+        }
+    }
+</script>
+{% endblock %}
