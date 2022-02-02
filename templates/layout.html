@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <link rel="icon" href="/static/favicon.png" sizes="16x16" type="image/png">
+        </script>
+        <title>{%block title%}{%endblock%} - Infinity Network</title>
+    </head>
+    <style>
+    .unselectable{
+        -webkit-user-select:none;
+    }
+    @media (max-width: 800px){
+        button{
+            font-size:25px;
+        }
+    }
+    button{
+        font-size:50px;
+        height:5rem;
+        width:12rem;
+        background-color:#00bfff;
+        border-style:none;
+        border-radius:25px;
+        color:#1f1e2b;
+        text-align:center;
+        line-height:1rem;
+    }
+    @keyframes rainbow{
+        0% {border-color:red;color:red;}
+        14% {border-color:orange;color:orange;}
+        28% {border-color:yellow;color:yellow;}
+        42% {border-color:green;color:green;}
+        56% {border-color:blue;color:blue;}
+        70% {border-color:purple;color:purple;}
+        84% {border-color:fuchsia;color:fuchsia;}
+        100% {border-color:red;color:red;}
+    }
+    .stats{
+        background-color:#1a1a1f;
+        border-style:solid;
+        border-radius:10px;
+        border-color:#1f1e8b;
+        word-wrap:break-word;
+    }
+    .game{
+        text-align:center;
+        height:700px;
+        width:80vw;
+        background-color:black;
+    }
+    a{
+        color:#00bfff;
+    }
+    /* width */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #2f2d40;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #00bfff;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #007bbb;
+    }
+    body{
+        background-color:#1a1a1f;
+        color:white;
+    }
+    #navbar{
+        background-color:#1f1e2b;
+    }
+    #warning{
+        position:absolute;
+        top:0;
+        background-color:yellow;
+        border:2.5px solid black;
+        border-radius:5px;
+        width:100%;
+        color:black;
+        font-weight:600;
+    }
+    </style>
+    <body>
+        <nav class="navbar navbar-expand-xl navbar-dark" id="navbar">
+
+            <p style="font-size:2.5vw;" class="navbar-brand"><img style="height: 5vw; width: 5vw;" src="/static/favicon.png">    {%block page%}{%endblock%}</p>
+            <div class="navbar-toggler" data-toggle="collapse" data-target="#navbarMenu">
+                <span class="navbar-toggler-icon"></span>
+            </div>
+            <div id="navbarMenu" class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a href="/home" class="nav-link" style="color:#00bfff;">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/apps" class="nav-link" style="color:#00bfff;">Apps</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/leaderboard" class="nav-link" style="color:#00bfff;">Leaderboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/updates" class="nav-link" style="color:#00bfff;">Updates</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/FAQ" class="nav-link" style="color:#00bfff;">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/reviews" class="nav-link" style="color:#00bfff;">Reviews</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/settings" class="nav-link" style="color:#00bfff;">Settings</a>
+                    </li>
+                    {{adminPanel | safe}}
+                    <li class="nav-item">
+                        <a href="/logout" class="nav-link" style="color:#00bfff;">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <center onclick="removeWarning();" id="warning">{{warning}}</center>
+        <main id="main" style="padding-top:50px; padding-bottom:50px; padding-left: 10vw;">{% block body %}{% endblock %}</main>
+        <footer class="footer bottom" style="bottom:0px; width:100%; height:60%; background-color:#151515;">
+            <div style="background-color:#151515;" class="fixed-bottom ml-auto">© Copyright 2021 CS50(IPSM - <a href="https://bradleyjoe007.github.io">Infinity Studios</a>)</div>
+        </footer>
+    </body>
+    <script>
+        let reco = document.querySelector("#warning");
+        function removeWarning(){
+            reco.remove();
+        }
+        if (reco.innerHTML == ""){
+            reco.remove();
+        }
+    </script>
+</html>
