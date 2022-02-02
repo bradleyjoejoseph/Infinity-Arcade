@@ -1,0 +1,410 @@
+{% extends "layout.html" %}
+
+{%block title%}Blackjack{%endblock%}
+{%block page%}Blackjack{%endblock%}
+
+{% block body %}
+<style>
+@media (min-width:1026px){
+    #canvas{
+        background-image:url("/static/border.png"), url("/static/blackjack.jpg");
+        background-size:900px;
+        width:900px;
+        height:600px;
+        position:relative;
+    }
+    #playerGUI{
+        position:absolute;
+        bottom:100px;
+        width:100%;
+        visibility:hidden;
+    }
+    #dealerGUI{
+        position:absolute;
+        top:100px;
+        width:100%;
+        visibility:hidden;
+    }
+    #hit{
+        position:absolute;
+        bottom:0;
+        left:0;
+        visibility:hidden;
+        background-image: url("/static/wood-pattern.png");
+        background-position:left;
+        width:50%;
+        border-radius:0;
+        border-top-left-radius:25px;
+        text-align:left;
+        padding-left:10px;
+    }
+    #stand{
+        position:absolute;
+        bottom:0;
+        right:0;
+        visibility:hidden;
+        background-image: url("/static/wood-pattern.png");
+        background-position:right;
+        width:50%;
+        border-radius:0;
+        border-top-right-radius:25px;
+        text-align:right;
+        padding-right:10px;
+    }
+    #won{
+        position:absolute;
+        width:100%;
+        top:150px;
+        font-size:100px;
+        color:red;
+        animation-name:rainbow;
+        animation-iteration-count:infinite;
+        animation-duration:2s;
+        visibility:hidden;
+    }
+    #play{
+        position:absolute;
+        width:100%;
+        top:250px;
+    }
+    #reload{
+        position:absolute;
+        top:0px;
+        left:0px;
+        height:100%;
+        width:100%;
+        border-radius:0;
+        visibility:hidden;
+    }
+    #cards{
+        width:100px;
+        height:153px;
+        display:inline
+    }
+    #imaeg{
+        height:auto;
+        width:75px;
+    }
+}
+@media (max-width:1025px){
+
+    #canvas{
+        background-image:url("/static/border.png"), url("/static/blackjack.jpg");
+        background-size:100% 100%;
+        width:100%;
+        height:60vh;
+        position:relative;
+    }
+    #playerGUI{
+        position:absolute;
+        bottom:30%;
+        width:100%;
+        visibility:hidden;
+    }
+    #dealerGUI{
+        position:absolute;
+        top:20%;
+        width:100%;
+        visibility:hidden;
+    }
+    #table
+    #hit{
+        position:absolute;
+        bottom:0;
+        left:0;
+        visibility:hidden;
+        font-size:10vw;
+        height:15%;
+        width:40%;
+    }
+    #stand{
+        position:absolute;
+        bottom:0;
+        right:0;
+        font-size:10vw;
+        visibility:hidden;
+        height:15%;
+        width:40%;
+    }
+    #won{
+        position:absolute;
+        width:100%;
+        top:150px;
+        font-size:10vw;
+        color:red;
+        animation-name:rainbow;
+        animation-iteration-count:infinite;
+        animation-duration:2s;
+        visibility:hidden;
+    }
+    #play{
+        position:absolute;
+        width:100%;
+        top:250px;
+    }
+    #reload{
+        position:absolute;
+        top:0px;
+        left:0px;
+        height:100%;
+        width:100%;
+        border-radius:0;
+        visibility:hidden;
+    }
+    #cards{
+        width:12vw;
+        height:19vw;
+        display:inline;
+    }
+    #imaeg{
+        height:auto;
+        width:10vw;
+    }
+}
+
+</style>
+<div class="game" style="background-color:inherit;">
+<center>
+    <div id="canvas">
+        <form action="/blackjack" method="post">
+            <button id="reload" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"></path>
+                  <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"></path>
+                </svg>
+              </button>
+              <input id="woned" type="hidden" name="postType" value="won">
+              <input id="who" type="hidden" name="won" value="None">
+        </form>
+        <div id="playerGUI">
+            <div id="cards">cards</div>
+<div id="playerValue">0</div>
+        </div>
+        <div id="dealerGUI">
+            <div id="dealerValue">0</div>
+            <div id="dealer">dealer</div>
+
+        </div>
+        <div id="won">WON!</div>
+<div style="float:right; text-align:left;" class="stats">CASH: £{{cash}}<br>BET: £{{bet}}<br>WON: £{{won}}</div>
+    <div id="table">
+        <div id="hit"><img id="imaeg" src="/static/hit.png" onclick="hit()"></div>
+        <div id="stand"><img id="imaeg" src="/static/stand.png" onclick="stand()"></div>
+    </div>
+        <form method="post" id="play"><button>Play</button><input id="played" type="hidden" name="postType" value="play"></form>
+    </div>
+</div>
+</center>
+<script>
+    let postType = "{{postType}}";
+    let playerCards = document.querySelector("#cards");
+    let dealerCards = document.querySelector("#dealer");
+    let dealerValue = document.querySelector("#dealerValue");
+    let playerValue = document.querySelector("#playerValue");
+    let deck = [];
+    let pCards = [];
+    let dCards = [];
+    let images = [];
+    let pValue = "0";
+    let dValue = "0";
+    let blackjack = "";
+
+    function getCard(){
+        let symbol = Math.floor(Math.random() * 4) + 1;
+        let type = Math.floor(Math.random() * 13) + 1;
+        if (symbol == 1){
+            symbol = "D";
+        }
+        else if (symbol == 2){
+            symbol = "S";
+        }
+        else if (symbol == 3){
+            symbol = "H";
+        }
+        else if (symbol == 4){
+            symbol = "C";
+        }
+
+        if (type == 1){
+            type = "A";
+        }
+        else if (type == 10){
+            type="T";
+        }
+        else if (type == 11){
+            type="J";
+        }
+        else if (type == 12){
+            type="Q";
+        }
+        else if (type == 13){
+            type="K";
+        }
+        let item = {type:"", symbol:""};
+        item.type = type;
+        item.symbol = symbol;
+        return item;
+    }
+    function makeCard(){
+        let card = getCard();
+        card = card.type + card.symbol + ".png";
+        while (containsObject(card, deck)){
+            card = getCard();
+            card = card.type + card.symbol + ".png";
+        }
+        deck.push(card);
+        return card;
+    }
+    if (postType == "play"){
+        document.querySelector("#play").style.visibility = "hidden";
+        document.querySelector("#stand").style.visibility = "visible";
+        document.querySelector("#hit").style.visibility = "visible";
+        document.querySelector("#dealerGUI").style.visibility = "visible";
+        document.querySelector("#playerGUI").style.visibility = "visible";
+        let card = makeCard();
+        pCards.push(card);
+        card = makeCard();
+        dCards.push(card);
+        reloadValues();
+    }
+    function reloadValues(){
+        var x;
+        images = [];
+        for (x = 0; x < pCards.length; x++){
+            images.push('<img id="cards" src="' + '/static/deck/' + pCards[x] + '">');
+        }
+        playerCards.innerHTML = images.join(" ");
+        x = 0;
+        images = [];
+        for (x = 0; x < dCards.length; x++){
+            images.push('<img id="cards" src="' + '/static/deck/' + dCards[x] + '">');
+        }
+
+        dealerCards.innerHTML = images.join(" ");
+        var i;
+        var value = 0;
+        for (i = 0; i < pCards.length; i++){
+            let tmp = pCards[i].slice(0, 2);
+            if (tmp[0] == "A"){
+                value += 1;
+            }
+            else if (tmp[0] == "T"){
+                value += 10;
+            }
+            else if (tmp[0] == "K"){
+                value += 10;
+            }
+            else if (tmp[0] == "Q"){
+                value += 10;
+            }
+            else if (tmp[0] == "J"){
+                value += 10;
+            }
+            else{
+                value += parseInt(tmp);
+
+            }
+
+        }
+        pValue = value;
+        value = 0;
+        for (i = 0; i < dCards.length; i++){
+            let tmp = dCards[i].slice(0, 2);
+            if (tmp[0] == "A"){
+                value += 1;
+            }
+            else if (tmp[0] == "T"){
+                value += 10;
+            }
+            else if (tmp[0] == "K"){
+                value += 10;
+            }
+            else if (tmp[0] == "Q"){
+                value += 10;
+            }
+            else if (tmp[0] == "J"){
+                value += 10;
+            }
+            else{
+                value += parseInt(tmp);
+
+            }
+
+        }
+        dValue = value;
+        dealerValue.innerHTML = dValue;
+        playerValue.innerHTML = pValue;
+        calc();
+        checkWin();
+    }
+    function checkWin(){
+        if (blackjack == "player"){
+            document.querySelector("#won").style.visibility = "visible";
+            document.querySelector("#won").innerHTML = "PLAYER WON!";
+            document.querySelector("#reload").style.visibility = "visible";
+            document.querySelector("#who").value = blackjack;
+            document.querySelector("#hit").style.visibility = "hidden";
+            document.querySelector("#stand").style.visibility = "hidden";
+        }
+        else if (blackjack == "dealer"){
+            document.querySelector("#won").style.visibility = "visible";
+            document.querySelector("#won").innerHTML = "DEALER WON!";
+            document.querySelector("#reload").style.visibility = "visible";
+            document.querySelector("#who").value = blackjack;
+            document.querySelector("#hit").style.visibility = "hidden";
+            document.querySelector("#stand").style.visibility = "hidden";
+        }
+    }
+    function hit(){
+        let card = makeCard();
+        pCards.push(card);
+        reloadValues();
+    }
+    function stand(){
+
+        while (dValue <= 16){
+            let card = makeCard();
+            dCards.push(card);
+            reloadValues();
+        }
+        if (dValue > pValue){
+            blackjack = "dealer";
+        }
+        else if (pValue > dValue){
+            blackjack = "player";
+        }
+        reloadValues();
+
+    }
+    function calc(){
+        if (pValue == 21){
+            blackjack = "player";
+        }
+        else if (dValue == 21){
+            blackjack = "dealer";
+        }
+        else if (pValue > 21){
+            blackjack = "dealer";
+        }
+        else if (dValue > 21){
+            blackjack = "player";
+        }
+        // template:
+        // else if (){
+        //     blackjack = "";
+        // }
+    }
+    //https://stackoverflow.com/a/4587130/14214193
+    function containsObject(obj, list) {
+        var i;
+        for (i = 0; i < list.length; i++) {
+            if (list[i] === obj) {
+                return true;
+            }
+
+        }
+        return false;
+
+    }
+</script>
+{% endblock %}
