@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{%block title%}Settings{%endblock%}
+{%block page%}Settings{%endblock%}
+
+{% block body %}
+<style>
+    #better{
+        width:4rem;
+        height:1.5rem;
+        font-size:1rem;
+    }
+</style>
+<center>
+<form action="/settings" method="post">
+    <div class="form-group">
+        <label for="multiplier">Bet:</label>
+        <input required type="text" name="multiplier"><br>
+        <button id="better" type="submit">Save</button>
+        </div>
+</form>
+</center>
+{% endblock %}
