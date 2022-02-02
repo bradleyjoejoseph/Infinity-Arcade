@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{%block title%}Admin get_{%endblock%}
+{%block page%}Admin get_{%endblock%}
+
+{% block body %}
+<style>
+    table, th, td {
+        border: 1px solid white;
+        border-collapse:collapse;
+        width:25%;
+    }
+</style>
+<table>
+        {% for dict_item in output %}
+        <tr>
+            {% for key, value in dict_item.items() %}
+                <td>{{value}}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+</table>
+{% endblock %}
