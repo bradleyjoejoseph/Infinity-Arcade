@@ -1,0 +1,127 @@
+{% extends "layout.html" %}
+
+{%block title%}Updates{%endblock%}
+{%block page%}Updates{%endblock%}
+
+{% block body %}
+<style>
+    .box{
+        background-color:#212128;
+        min-height:150px;
+        width:90%;
+        border-radius:10px;
+        padding:25px;
+        margin-bottom:50px;
+        position:relative;
+    }
+    .title{
+        width:100%;
+        text-align:center;
+        font-size:25px;
+    }
+    .info{
+        font-size:15px;
+    }
+    hr{
+        border:0.05px solid white;
+        border-radius:100%;
+    }
+    .date{
+        position:absolute;
+        right:10px;
+        top:10px;
+    }
+    b{
+        color:yellow;
+    }
+</style>
+<!--   template
+<div class="box">
+    <div class="date">Date</div>
+    <div class="title">Title</div>
+    <hr>
+    <div class="info">
+        Info
+    </div>
+</div>
+-->
+<div class="box">
+    <div class="date">10:14 | 26/6/21</div>
+    <div class="title">History Reset</div>
+    <hr>
+    <div class="info">
+        There has been a history reset just to speed up the server abit meaning that your recents might disappear and so will the times played on the games. RIP Infinite Spinners 13K TP. TP - Times Played.
+    </div>
+</div>
+<div class="box">
+    <div class="date">12:53 | 25/6/21</div>
+    <div class="title">Player Count</div>
+    <hr>
+    <div class="info">
+        On the welcome page you can now see how many players we have now!
+    </div>
+</div>
+<div class="box">
+    <div class="date">12:46 | 25/6/21</div>
+    <div class="title">$ ¬ £</div>
+    <hr>
+    <div class="info">
+        Changed all the dollar signs to pound signs. Because... We love pounds-
+    </div>
+</div>
+<div class="box">
+    <div class="date">12:40 | 25/6/21</div>
+    <div class="title">Chat! for now.</div>
+    <hr>
+    <div class="info">
+        Chat has been finished for now, until we find a way for an instantanous reply, we will keep on using flask for the chat frameworks. We are working towards it, any questions about the chat can be asked in the <a href="FAQ.html">FAQ</a> section, otherwise the chat can be found in the other section in apps.
+    </div>
+</div>
+<div class="box">
+    <div class="date">09:52 | 25/6/21</div>
+    <div class="title">Big Update</div>
+    <hr>
+    <div class="info">
+        Big update release. Bugs have been patched. And we have changed this project into the Infinity Network, previously it was the Infinity Arcade. In action to this we changed the games sections to the app section. Where you can find games and even some new features like the chat app. Not completely finshed but the chat app you can speak to anbody in the world with it.
+    </div>
+</div>
+<div class="box">
+    <div class="date">15:28 | 20/6/21</div>
+    <div class="title">Money Shortcut</div>
+    <hr>
+    <div class="info">
+        Now money should appear in short form in every game and on the leaderboard. Your money will still be stored on our servers as an exact number but will be displayed shorter this should enhance user experience.
+    </div>
+</div>
+<div class="box">
+    <div class="date">09:24 | 20/6/21</div>
+    <div class="title">Two New Topics</div>
+    <hr>
+    <div class="info">
+        There are now two new topics in the games section: Earn Money and Fun. Pretty self explanatory but earn money are the games you can play to make money, and fun the games you can plya for fun without making money.
+    </div>
+</div>
+<div class="box">
+    <div class="date">10:56 | 19/6/21</div>
+    <div class="title">CPS Master Device Support</div>
+    <hr>
+    <div class="info">
+        CPS Master can now be played on mobile and smaller browser sizes.
+        It should resize depending on the size of your browser window or device size.
+        If you find any bugs with this please report them in the FAQ section.
+    </div>
+</div>
+<div class="box">
+    <div class="date">09:51 | 19/6/21</div>
+    <div class="title">CPS Master Bug</div>
+    <hr>
+    <div class="info">
+        The leaderboard for CPS Master has recently been reset, as the following three players: <b>WaffleMan</b>, <b>bigboytime</b>, <b>GameyUwU</b> discovered a bug resulting in the leaderboard to disorentate.
+        <b>WaffleMan</b> has had their account terminated due to this as they maliciously attacked the server.
+        May this be a warning to everybody else that it is part of the ToS of Infinity Studios that when you see a bug or glitch that you report it to a member of staff.
+        We strictly enforce our ToS, and there are no execptions for anybody.
+        If you find a bug please report it in FAQ, if you don't even do this, we ask you not to abuse the bug.
+        I am sorry for any inconvience caused.
+    </div>
+</div>
+{% endblock %}
