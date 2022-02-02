@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{%block title%}Arcade Mathematicians{%endblock%}
+{%block page%}Arcade Mathematicians{%endblock%}
+
+{% block body %}
+<style>
+    #output{
+        font-size:100px;
+        color:white;
+    }
+    #num1{
+        background-color:red;
+        border-top-left-radius:25px;
+        border-bottom-left-radius:25px;
+        color:orange;
+        font-size:150px;
+    }
+    #num2{
+        border-top-right-radius:25px;
+        border-bottom-right-radius:25px;
+        background-color:orange;
+        color:red;
+        font-size:150px;
+    }
+    #canvas{
+        height:700px;
+        width:700px;
+        background-image:url("/static/arcmathBackground.png");
+        text-align:center;
+    }
+    #stats{
+        font-size:50px;
+    }
+</style>
+<div class="game">
+<center>
+<div id="canvas">
+    <div id="output">OUTPUT</div>
+    <div><b id="num1">1</b> <b style="font-size:150px; background-color:black;">x</b> <b id="num2">1</b></div>
+    <form id="form" onsubmit="reload(); return false; " autofocus="on" autocomplete="off">
+        <input type="text" placeholder="input" id="input">
+        <button id="button" type="submit">Enter</button>
+    </form>
+    <div id="stats">
+        <div id="count">COUNT: 0</div>
+        <div id="correct">CORRECT: 0</div>
+        <div id="wrong">WRONG: 0</div>
+    </div>
+</div>
+</center>
+</div>
+    <script>
+    let count = 0
+    let correct = 0
+    let wrong = 0
+        function reload(){
+            count += 1;
+            let input = document.querySelector("#input").value;
+            let output = document.querySelector("#output");
+            let num1 = document.querySelector("#num1").innerHTML;
+            let num2 = document.querySelector("#num2").innerHTML;
+            output.innerHTML = check(num1, num2, input, count)
+            num1 = Math.floor(Math.random() * 12) + 1;
+            num2 = Math.floor(Math.random() * 12) + 1;
+            if (num1 == 0){
+                num1 = 1
+            }
+            if (num2 == 0){
+                num2 == 1
+            }
+            let num = document.querySelector("#num1");
+            let mun = document.querySelector("#num2");
+            num.innerHTML = num1;
+            mun.innerHTML = num2;
+            document.querySelector("#count").innerHTML = "COUNT: " + count
+            document.querySelector("#correct").innerHTML = "CORRECT: " + correct
+            document.querySelector("#wrong").innerHTML = "WRONG: " + wrong
+            document.querySelector("#form").reset();
+        }
+        function check(num1, num2, input, count){
+            input = parseInt(input)
+            if ((num1 * num2) == input){
+                document.querySelector("#output").style.color = "green";
+                correct += 1;
+                return "Correct";
+            }
+            else{
+                document.querySelector("#output").style.color = "red";
+                wrong += 1;
+                return "Wrong";
+            }
+        }
+
+    </script>
+{% endblock %}
