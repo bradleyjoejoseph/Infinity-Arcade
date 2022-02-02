@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{%block title%}FAQ{%endblock%}
+{%block page%}FAQ{%endblock%}
+
+{% block body %}
+<style>
+    .questionBox{
+        background-color:#212128;
+        min-height:150px;
+        width:90%;
+        border-radius:10px;
+        padding:25px;
+        margin-bottom:50px;
+    }
+    .question{
+        width:100%;
+        text-align:center;
+        font-size:25px;
+    }
+    .answer{
+        font-size:15px;
+    }
+    hr{
+        border:0.05px solid white;
+        border-radius:100%;
+    }
+</style>
+<div class="questionBox" id="ask">
+    <div class="question">Ask a question! Or give us a review!</div>
+    <hr>
+    <div class="answer">
+        <form action="/FAQ" method="post">
+            <input id="big" name="cuestion" required placeholder="Insert Question Here">
+            <button type="submit" style="width:5rem;height:2rem; font-size:1rem;">Ask</button><br>
+            We will answer as soon as possible!
+        </form>
+    </div>
+</div>
+<div class="questionBox">
+    <div class="question">Why is my CPS Master highscore gone?</div>
+    <hr>
+    <div class="answer">Please check the <a href="/updates">Updates</a> page for information about data & leaderboard resets.</div>
+</div>
+<div class="questionBox">
+    <div class="question">Why don't I get my bets in games like blackjack?</div>
+    <hr>
+    <div class="answer">This is because when you win the game the bets are not automatically given to you. As it says in the <a href="/blackjack/info">blackjack info page</a> you must hit the reload button when you win, it shouldn't take any of your bets as the bets in blackjack are applied when you press the play button within the game!</div>
+</div>
+<div class="questionBox">
+    <div class="question">Who made this and why?</div>
+    <hr>
+    <div class="answer">This is the final project of IPSM from Infinity Studios.  Visit the official page <a target="_blank" href="https://bradleyjoe007.github.io">here</a>. This is a final project for cs50 a university course by Harvard, learn more <a target="_blank" href="https://cs50.harvard.edu/x/">here</a>.</div>
+</div>
+<div class="questionBox">
+    <div class="question">Is there a way I just play the games where you bet money for fun so I don't lose my money?</div>
+    <hr>
+    <div class="answer">You can set your bet to 0. This will mean you won't win any money but you won't lose any either.</div>
+</div>
+{% endblock %}
