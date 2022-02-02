@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{%block title%}Reviews{%endblock%}
+{%block page%}Reviews{%endblock%}
+
+{% block body %}
+<style>
+    .questionBox{
+        background-color:#212128;
+        min-height:150px;
+        width:90%;
+        border-radius:10px;
+        padding:25px;
+        margin-bottom:50px;
+        position:relative;
+    }
+    .question{
+        width:100%;
+        text-align:center;
+        font-size:25px;
+    }
+    .answer{
+        font-size:15px;
+    }
+    hr{
+        border:0.05px solid white;
+        border-radius:100%;
+    }
+    #text{
+        width:70%;
+        height:300px;
+        padding:5px;
+        background-color:#1a1a2f;
+        color:white;
+        border:1px solid white;
+        border-radius:0.5rem;
+        margin:6px;
+    }
+    #drop{
+        background-color:#1a1a2f;
+        color:white;
+        border:1px solid white;
+        border-radius:0.5rem;
+        padding:5px;
+        width:30%;
+        margin-left:5px;
+    }
+    #r-title{
+        background-color:#1a1a2f;
+        color:white;
+        border:1px solid white;
+        border-radius:0.5rem;
+        padding:5px;
+        width:40%;
+    }
+    .username{
+        font-size:10px;
+        position:absolute;
+        bottom:10px;
+    }
+    .stars{
+        position:absolute;
+        right:10%;
+        top:10%;
+        font-size:10px;
+    }
+
+</style>
+<div class="questionBox" id="ask">
+    Our average rating: {{average}}
+    <div class="question">Give us a review!</div>
+    <hr>
+    <div class="answer">
+        <form action="/reviews" method="post">
+            <select required id="drop" name="stars" type="dropdown" placeholder="Rating 1-5 Stars">
+                <option disabled selected value="">Rating 1-5</option>
+                <option value="1">1 Star</option>
+                <option value="2">2 Star</option>
+                <option value="3">3 Star</option>
+                <option value="4">4 Star</option>
+                <option value="5">5 Star</option>
+            </select>
+            <input id="r-title" name="title" placeholder="Title" required><br>
+            <textarea id="text" name="text" placeholder="Enter your review here" required></textarea><br>
+            <button type="submit" style="width:5rem;height:2rem; font-size:1rem;">></button><br>
+            We want your opinions!
+        </form>
+    </div>
+</div>
+{% for item in reviewsList %}
+<div class="questionBox">
+
+    <div class="question">{{item.title}} <div class="stars">Rating: {{item.rating}}</div></div>
+    <hr>
+    <div class="answer">{{item.opinion}}</div>
+    <div class="username">by {{item.username}}</div>
+</div>
+{% endfor %}
+{% endblock %}
